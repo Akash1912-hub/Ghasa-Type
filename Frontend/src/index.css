@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #323437;
+    color: #d1d0c5;
+    font-family: 'Roboto Mono', monospace;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background: #525357;
+    color: #d1d0c5;
+  }
+}
+
+@keyframes cursor {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.cursor-animation {
+  animation: cursor 1s infinite;
+}
+
+.word-incorrect {
+  color: #ca4754;
+}
+
+.word-correct {
+  color: #d1d0c5;
+}
+
+.char-incorrect {
+  color: #ca4754;
+}
+
+.char-correct {
+  color: #d1d0c5;
+}
+
+.char-current {
+  border-left: 2px solid #d1d0c5;
+  animation: cursor 1s infinite;
+}
+
+.typed-char {
+  transition: color 0.2s ease;
+}
