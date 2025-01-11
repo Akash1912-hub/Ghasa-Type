@@ -41,6 +41,74 @@ export function useTypingTest(
     performanceData: []
   });
 
+  const handleWordCompletion = useCallback((word: string, typedWord: string) => {
+    const now = Date.now();
+    const wordTime = startTime ? (now - startTime) / 1000 : 0;
+    const wordWpm = (typedWord.length / 5) / (wordTime / 60);
+    const isCorrect = typedWord === word;
+
+    const newWordHistory = [...wordHistory, {
+      word,
+      correct: isCorrect,
+      time: wordTime,
+      wpm: wordWpm
+    }];
+
+    setWordHistory(newWordHistory);
+    setCurrentIndex(prev => prev + 1);
+    setUserInput('');
+
+    if (startTime) {
+      const newStats = calculateStats(
+        stats,
+        word,
+        typedWord,
+        now,
+        startTime,
+        newWordHistory,
+        performanceData
+      );
+      setStats(newStats);
+
+      const elapsedTime = (now - startTime) / 1000;
+      setPerformanceData(prev => [...prev, {
+        timestamp: elapsedTime,
+        wpm: newStats.wpm,
+        accuracy: newStats.accuracy
+      }]);
+    }
+  }, [startTime, stats, wordHistory, performanceData]);
+
+  const handleInput = useCallback((value: string) => {
+    if (!isRunning && value.length > 0) {
+      setIsRunning(true);
+      setStartTime(Date.now());
+    }
+
+    if (timeLeft === 0) return;
+
+    const currentWord = words[currentIndex];
+    const isCodeMode = words.some(word => word.includes('    ') || word.includes('class') || word.includes('def'));
+
+    if (isCodeMode) {
+      // For code mode, check for Enter key (line break)
+      if (value.endsWith('\n')) {
+        handleWordCompletion(currentWord, currentWord);
+      } else {
+        setUserInput(value);
+      }
+    } else {
+      // For normal mode, check for space
+      if (value.endsWith(' ')) {
+        const typedWord = value.trim();
+        handleWordCompletion(currentWord, typedWord);
+      } else {
+        setUserInput(value);
+      }
+    }
+  }, [currentIndex, isRunning, words, timeLeft, handleWordCompletion]);
+
+  // Initialization function
   const initTest = useCallback(() => {
     const newWords = getTestContent(wordMode, wordLength, language);
     setWords(newWords);
@@ -87,64 +155,6 @@ export function useTypingTest(
     }
   }, [user]);
 
-  const handleInput = useCallback(async (value: string) => {
-    if (!isRunning && value.length > 0) {
-      setIsRunning(true);
-      setStartTime(Date.now());
-    }
-
-    if (timeLeft === 0) return;
-
-    setUserInput(value);
-
-    if (value.endsWith(' ')) {
-      const word = words[currentIndex];
-      const typedWord = value.trim();
-      
-      // Require minimum 3 characters for word completion
-      if (typedWord.length < 3) {
-        return;
-      }
-
-      const isCorrect = typedWord === word;
-      const now = Date.now();
-      const wordTime = startTime ? (now - startTime) / 1000 : 0;
-      const wordWpm = (typedWord.length / 5) / (wordTime / 60);
-
-      const newWordHistory = [...wordHistory, {
-        word,
-        correct: isCorrect,
-        time: wordTime,
-        wpm: wordWpm
-      }];
-
-      setWordHistory(newWordHistory);
-      setCurrentIndex(prev => prev + 1);
-      setUserInput('');
-
-      if (startTime) {
-        const newStats = calculateStats(
-          stats,
-          word,
-          typedWord,
-          now,
-          startTime,
-          newWordHistory,
-          performanceData
-        );
-        setStats(newStats);
-
-        // Update performance data
-        const elapsedTime = (now - startTime) / 1000;
-        setPerformanceData(prev => [...prev, {
-          timestamp: elapsedTime,
-          wpm: newStats.wpm,
-          accuracy: newStats.accuracy
-        }]);
-      }
-    }
-  }, [currentIndex, isRunning, startTime, stats, timeLeft, wordHistory, words, performanceData]);
-
   // Timer effect
   useEffect(() => {
     let timer: number;
@@ -154,7 +164,6 @@ export function useTypingTest(
           if (prev <= 1) {
             clearInterval(timer);
             setIsRunning(false);
-            // Update user stats when test completes
             updateUserStats(stats);
             return 0;
           }
