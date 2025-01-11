@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth');  // Import authRoutes here
 const adminRoutes = require('./routes/admin');
 const jwt = require('jsonwebtoken');
 
@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // Auth middleware for protected routes
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
-  
+
   if (!token) {
     return res.status(401).json({ message: 'No token provided' });
   }
@@ -34,7 +34,7 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);  // This line should correctly route to authRoutes
 app.use('/api/admin', authMiddleware, adminRoutes);
 
 const PORT = process.env.PORT || 5000;
