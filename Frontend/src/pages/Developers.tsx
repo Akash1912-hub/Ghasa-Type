@@ -2,15 +2,15 @@ import React from 'react';
 import { Github, Keyboard } from 'lucide-react';
 
 export const Developers: React.FC = () => (
-  <div className="max-w-4xl mx-auto p-8 space-y-12">
+  <div className="max-w-4xl mx-auto p-4 sm:p-8 space-y-8 sm:space-y-12">
     <div className="text-center space-y-4">
-      <h1 className="text-4xl font-bold">About ghasatype</h1>
-      <p className="text-lg text-gray-400">
+      <h1 className="text-3xl sm:text-4xl font-bold">About ghasatype</h1>
+      <p className="text-base sm:text-lg text-gray-400">
         Inspired by monkeytype, reimagined for modern developers
       </p>
     </div>
     
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
       {[
         {
           name: "Akash MK",
@@ -20,7 +20,7 @@ export const Developers: React.FC = () => (
         },
         {
           name: "Siva Sabari Ganesan A",
-          role: "UI/UX Designer",
+          role: "Frontend Developer",
           github: "SivaSabariGanesan",
           description: "Design systems architect focusing on minimal, functional interfaces"
         }
@@ -42,13 +42,13 @@ export const Developers: React.FC = () => (
       ))}
     </div>
 
-    <div className="bg-white/5 p-8 rounded-lg space-y-6">
+    <div className="bg-white/5 p-6 sm:p-8 rounded-lg space-y-6">
       <div className="flex items-center space-x-3">
-        <Keyboard className="w-8 h-8 text-[#e2b714]" />
-        <h2 className="text-2xl font-bold">Features & Improvements</h2>
+        <Keyboard className="w-6 sm:w-8 h-6 sm:h-8 text-[#e2b714]" />
+        <h2 className="text-xl sm:text-2xl font-bold">Features & Improvements</h2>
       </div>
       
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         <div>
           <h3 className="text-lg font-semibold mb-3">Core Features</h3>
           <ul className="space-y-2 text-gray-300">
@@ -75,7 +75,7 @@ export const Developers: React.FC = () => (
         ghasatype is an open-source project. We welcome contributions from the community.
       </p>
       <a
-        href="https://github.com/ghasatype/ghasatype"
+        href="https://github.com/SivaSabariGanesan/Ghasa-type.git"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center space-x-2 px-6 py-3 bg-[#e2b714] text-black rounded-md hover:bg-[#e2b714]/90 transition-colors"
